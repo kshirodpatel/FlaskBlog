@@ -6,3 +6,7 @@ view = Blueprint("view", __name__)
 @view.route("/home")
 def home():
     return render_template("home.html")
+
+@view.route("/create-post")
+def create_post():
+    return render_template("create-post.html")
