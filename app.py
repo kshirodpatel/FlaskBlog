@@ -1,8 +1,10 @@
 import os
 from flask import Flask
-from extensions import db, login_manager
+from extensions import db,login_manager
 from dotenv import load_dotenv
 from os import path
+from models import User
+
 
 # Load env variables from .env into the system enviornment
 load_dotenv()
@@ -25,6 +27,14 @@ app.register_blueprint(view)
 # Create DBs
 with app.app_context():
     db.create_all()
- 
+
+
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+login_manager.init_app(app)
+login_manager.login_view = 'auth.login'
+
 if __name__ == '__main__':
     app.run(debug=True)
