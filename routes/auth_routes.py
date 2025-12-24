@@ -22,7 +22,7 @@ def login():
                 print("Invalid password")
         else:
             print("Invalid User")
-    return render_template("login.html", user=current_user)
+    return render_template("/auth/login.html", user=current_user)
 
 # Route for signup user
 @auth.route("/signup", methods=['GET', 'POST'])
@@ -50,7 +50,7 @@ def signup():
                 db.session.add(new_user)
                 db.session.commit()
                 return redirect(url_for("auth.login"))
-    return render_template("signup.html", user=current_user)
+    return render_template("/auth/signup.html", user=current_user)
 
 # Route for Logout
 @auth.route("/logout")
@@ -60,7 +60,7 @@ def logout():
 # Route for user profile
 @auth.route("/profile")
 def profile():
-    return render_template("profile.html", user=current_user)
+    return render_template("/auth/profile.html", user=current_user)
 
 # Route for user logout
 @auth.route("/sign-out")
