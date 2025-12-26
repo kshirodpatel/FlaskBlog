@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
-from models import Post, User
+from models import Post, User, Comment
 from flask_login import login_user, logout_user, login_required, current_user
 from extensions import db
+from sqlalchemy.sql import func
 post = Blueprint("post", __name__)
 
 @post.route("/create-post", methods=["GET", "POST"])
@@ -25,11 +26,23 @@ def create_post():
 @post.route("/post/<post_id>", methods=["GET", "POST"])
 @login_required
 def post_view(post_id):
-    post = Post.query.filter_by(id=post_id).first()
-    if post is None:
+    if request.method == "POST":
+        post_comment = request.form.get("post_comment")
+
+        if len(post_comment) < 5 :
+            print("Enter a valid comment")
+        
+        new_comment = Comment(text=post_comment, author=current_user.id, post_id=post_id)
+        print("New comment added")
+        db.session.add(new_comment)
+        db.session.commit()
+
+    current_post = Post.query.filter_by(id=post_id).first()
+    if current_post is None:
         return render_template("error.html", post_id=post_id)
     else:
-        return render_template("/post/post-details.html", post_id=post_id)
+        random_posts = Post.query.filter(id != post_id).order_by(func.random()).limit(2).all()
+        return render_template("/post/post-details.html", post=current_post, random_posts = random_posts)
 
 @post.route("/posts/<author_name>", methods=["GET", "POST"])
 @login_required
@@ -38,4 +51,5 @@ def posts_by_author(author_name):
     if not user:
         return render_template("error.html", post_id=author_name)
     else:
-        return render_template("/author/posts-by-author.html", author=author_name)  
+        posts = user.posts
+        return render_template("/author/posts-by-author.html", posts=posts)  
