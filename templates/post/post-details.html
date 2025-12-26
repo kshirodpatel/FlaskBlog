@@ -2,16 +2,15 @@
 content %}
 <div class="rgy rhc ria">
   <div class="rfv rgb rgf rgi rgn rgo rha rhz rih rin">
+    {% if post %}
     <article class="rfv rgd rge rid rif">
-      <time datetime="2020-03-16" class="rfz rhh rhl">Mar 16, 2020</time>
+      <time datetime="2020-03-16" class="rfz rhh rhl"
+        >{{ post.date_created.strftime('%Y-%m-%d') }}</time
+      >
       <h2 id="featured-post" class="rfy rhe rhi rhj rhk rhq ric">
-        We’re incredibly proud to announce we have secured $75m in Series B
+        {{post.post_title}}
       </h2>
-      <p class="rfy rhg rhl">
-        Libero neque aenean tincidunt nec consequat tempor. Viverra odio id
-        velit adipiscing id. Nisi vestibulum orci eget bibendum dictum. Velit
-        viverra posuere vulputate volutpat nunc. Nunc netus sit faucibus.
-      </p>
+      <p class="rfy rhg rhl">{{post.post_content}}</p>
       <div class="rfy rga rgj rgk rgl rhw rhx rhy rie rii">
         <div class="rga rij rim rip">
           <a href="#" class="rga rgm rhh rhi rhq">
@@ -20,28 +19,50 @@ content %}
               alt=""
               class="rgc rgh rgs rgx"
             />
-            Michael Foster
+            {{post.user.username}}
           </a>
         </div>
       </div>
+      <div class="mt-5">
+        <label for="Post Comment" class="block text-sm/6 font-medium text-white"
+          >Post Comment</label
+        >
+        <form class="mt-5" method="POST">
+          <textarea
+            id="post_comment"
+            name="post_comment"
+            rows="3"
+            class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+          ></textarea>
+          <div class="mt-6 flex items-center justify-end gap-x-6">
+            <button
+              type="submit"
+              class="rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+            >
+              Add Comment
+            </button>
+          </div>
+        </form>
+      </div>
     </article>
+
+    {% endif %}
+
     <div class="rfv rgd rge rgt rgv rhd rib rid rig rik rio">
       <div class="rfw rgp rgr">
+        {% if random_posts %} {% for random_post in random_posts %}
         <article class="rhb">
           <div class="rhs rft rgg">
-            <time datetime="2020-03-16" class="rfz rhh rhl">Mar 10, 2020</time>
+            <time datetime="2020-03-16" class="rfz rhh rhl"
+              >{{ random_post.date_created.strftime('%Y-%m-%d') }}</time
+            >
             <h2 class="rfx rhf rhi rhq rhr">
-              <a href="#">
+              <a href="{{random_post.id}}">
                 <span class="rfs rfu"></span>
-                Boost your conversion rate
+                {{random_post.post_title}}
               </a>
             </h2>
-            <p class="rfy rhh rhl">
-              Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam
-              vitae illo. Non aliquid explicabo necessitatibus unde. Sed
-              exercitationem placeat consectetur nulla deserunt vel iusto
-              corrupti dicta laboris incididunt.
-            </p>
+            <p class="rfy rhh rhl">{{random_post.post_content}}</p>
           </div>
           <div class="rfy rga">
             <a href="#" class="rft rga rgm rhh rhi rhq">
@@ -50,36 +71,11 @@ content %}
                 alt=""
                 class="rgc rgh rgs rgx"
               />
-              Lindsay Walton
+              {{random_post.user.username}}
             </a>
           </div>
         </article>
-        <article class="rhb">
-          <div class="rhs rft rgg">
-            <time datetime="2020-03-10" class="rfz rhh rhl">Feb 12, 2020</time>
-            <h2 class="rfx rhf rhi rhq rhr">
-              <a href="#">
-                <span class="rfs rfu"></span>
-                How to use search engine optimization to drive sales
-              </a>
-            </h2>
-            <p class="rfy rhh rhl">
-              Optio sit exercitation et ex ullamco aliquid explicabo. Dolore do
-              ut officia anim non ad eu. Magna laboris incididunt commodo elit
-              ipsum.
-            </p>
-          </div>
-          <div class="rfy rga">
-            <a href="#" class="rft rga rgm rhh rhi rhq">
-              <img
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80"
-                alt=""
-                class="rgc rgh rgs rgx"
-              />
-              Tom Cook
-            </a>
-          </div>
-        </article>
+        {%endfor%} {% endif %}
       </div>
     </div>
   </div>
