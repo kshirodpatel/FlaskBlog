@@ -26,23 +26,29 @@ def create_post():
 @post.route("/post/<post_id>", methods=["GET", "POST"])
 @login_required
 def post_view(post_id):
-    if request.method == "POST":
-        post_comment = request.form.get("post_comment")
-
-        if len(post_comment) < 5 :
-            print("Enter a valid comment")
-        
-        new_comment = Comment(text=post_comment, author=current_user.id, post_id=post_id)
-        print("New comment added")
-        db.session.add(new_comment)
-        db.session.commit()
-
     current_post = Post.query.filter_by(id=post_id).first()
     if current_post is None:
         return render_template("error.html", post_id=post_id)
     else:
         random_posts = Post.query.filter(id != post_id).order_by(func.random()).limit(2).all()
-        return render_template("/post/post-details.html", post=current_post, random_posts = random_posts)
+
+        if request.method == "POST":
+            post_comment = request.form.get("post_comment")
+
+            if len(post_comment) < 5 :
+                post_comments = Comment.query.filter_by(
+        post_id=post_id).all()
+                return render_template("/post/post-details.html", post=current_post, random_posts = random_posts, post_comments=post_comments)
+
+            new_comment = Comment(text=post_comment, author=current_user.id, post_id=post_id)
+            print("New comment added")
+            db.session.add(new_comment)
+            db.session.commit()
+
+        post_comments = Comment.query.filter_by(post_id=post_id).all()
+        return render_template("/post/post-details.html", post=current_post, random_posts = random_posts, post_comments=post_comments, author=current_user.id)
+
+    
 
 @post.route("/posts/<author_name>", methods=["GET", "POST"])
 @login_required
